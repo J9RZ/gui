@@ -2,82 +2,77 @@
 
 local ScreenGui = Instance.new("ScreenGui")
 local Frame = Instance.new("Frame")
+local drop = Instance.new("TextButton")
+local fly = Instance.new("TextButton")
 local TextLabel = Instance.new("TextLabel")
 local TextLabel_2 = Instance.new("TextLabel")
-local SwagCrash = Instance.new("TextButton")
-local script2 = Instance.new("TextButton")
-local script3 = Instance.new("TextButton")
+local CRASHER = Instance.new("TextButton")
+local MAIN = Instance.new("TextLabel")
 local TextLabel_3 = Instance.new("TextLabel")
-local TextLabel_4 = Instance.new("TextLabel")
-local TextLabel_5 = Instance.new("TextLabel")
 
 --Properties:
 
 ScreenGui.Parent = game.CoreGui
 
 Frame.Parent = ScreenGui
-Frame.BackgroundColor3 = Color3.fromRGB(102, 102, 102)
-Frame.Position = UDim2.new(0.311671108, 0, 0.214711726, 0)
-Frame.Size = UDim2.new(0, 268, 0, 190)
-Frame.Active = true
-Frame.Draggable = true
+Frame.BackgroundColor3 = Color3.fromRGB(31, 31, 31)
+Frame.BorderColor3 = Color3.fromRGB(31, 31, 31)
+Frame.Position = UDim2.new(0.332891226, 0, 0.22067596, 0)
+Frame.Size = UDim2.new(0, 305, 0, 217)
 
-TextLabel.Parent = Frame
-TextLabel.BackgroundColor3 = Color3.fromRGB(49, 49, 49)
-TextLabel.BorderColor3 = Color3.fromRGB(67, 67, 67)
-TextLabel.Position = UDim2.new(0, 0, -0.0736842081, 0)
-TextLabel.Size = UDim2.new(0, 268, 0, 14)
-TextLabel.Font = Enum.Font.SourceSans
-TextLabel.Text = ""
-TextLabel.TextColor3 = Color3.fromRGB(0, 0, 0)
-TextLabel.TextSize = 14.000
+drop.Name = "drop"
+drop.Parent = Frame
+drop.BackgroundColor3 = Color3.fromRGB(21, 21, 21)
+drop.BorderColor3 = Color3.fromRGB(21, 21, 21)
+drop.Position = UDim2.new(0.298360646, 0, 0.322580665, 0)
+drop.Size = UDim2.new(0, 157, 0, 50)
+drop.Font = Enum.Font.GothamBold
+drop.Text = "Drop"
+drop.TextColor3 = Color3.fromRGB(247, 247, 247)
+drop.TextSize = 14.000
+drop.MouseButton1Down:connect(function()
+	Dropping = false
+	local Drop = workspace.Ignored.Drop
+	local OldMoney = 0
+	for i,v in pairs(Drop:GetChildren()) do
+		if v.Name == "MoneyDrop" then
+			local numbers = string.gsub(v.BillboardGui.TextLabel.Text, "%D", "")
+			OldMoney += numbers
+		end
+	end
+	game.ReplicatedStorage.MainEvent:FireServer(
+		"DropMoney",
+		10000
+	)
+	CustomDrop = true
+	coroutine.wrap(function()
+		repeat wait(0.5) 	
+			game.ReplicatedStorage.MainEvent:FireServer(
+				"DropMoney",
+				10000
+			)
+			local Drop = workspace.Ignored.Drop
+			local Money = 0
+			for i,v in pairs(Drop:GetChildren()) do
+				if v.Name == "MoneyDrop" then
+					local numbers = string.gsub(v.BillboardGui.TextLabel.Text, "%D", "")
+					Money += numbers
+				end
+			end 
+		until Money >= (OldMoney+5000000) or not CustomDrop
+	end)()
 
-TextLabel_2.Parent = Frame
-TextLabel_2.BackgroundColor3 = Color3.fromRGB(49, 49, 49)
-TextLabel_2.BorderColor3 = Color3.fromRGB(67, 67, 67)
-TextLabel_2.Position = UDim2.new(-0.115671642, 0, -0.0736842081, 0)
-TextLabel_2.Size = UDim2.new(0, 60, 0, 204)
-TextLabel_2.Font = Enum.Font.SourceSans
-TextLabel_2.Text = ""
-TextLabel_2.TextColor3 = Color3.fromRGB(0, 0, 0)
-TextLabel_2.TextSize = 14.000
-
-SwagCrash.Name = "Swag Crash"
-SwagCrash.Parent = Frame
-SwagCrash.BackgroundColor3 = Color3.fromRGB(102, 102, 102)
-SwagCrash.BorderColor3 = Color3.fromRGB(102, 102, 102)
-SwagCrash.Position = UDim2.new(-0.100746267, 0, 0.321052641, 0)
-SwagCrash.Size = UDim2.new(0, 52, 0, 24)
-SwagCrash.Font = Enum.Font.SourceSans
-SwagCrash.Text = "Crasher"
-SwagCrash.TextColor3 = Color3.fromRGB(255, 255, 255)
-SwagCrash.TextSize = 14.000
-SwagCrash.MouseButton1Down:connect(function()
-	loadstring(game:HttpGet('https://raw.githubusercontent.com/lerkermer/lua-projects/master/SuperCustomServerCrasher'))()
-end)
-
-script2.Name = "script2"
-script2.Parent = Frame
-script2.BackgroundColor3 = Color3.fromRGB(52, 52, 52)
-script2.BorderColor3 = Color3.fromRGB(52, 52, 52)
-script2.Position = UDim2.new(0.324626863, 0, 0.184210524, 0)
-script2.Size = UDim2.new(0, 124, 0, 37)
-script2.Font = Enum.Font.Gotham
-script2.Text = "Drop"
-script2.TextColor3 = Color3.fromRGB(255, 255, 255)
-script2.TextSize = 14.000
-
-script3.Name = "script3"
-script3.Parent = Frame
-script3.BackgroundColor3 = Color3.fromRGB(52, 52, 52)
-script3.BorderColor3 = Color3.fromRGB(52, 52, 52)
-script3.Position = UDim2.new(0.324626863, 0, 0.447368383, 0)
-script3.Size = UDim2.new(0, 127, 0, 38)
-script3.Font = Enum.Font.Ubuntu
-script3.Text = "Fly"
-script3.TextColor3 = Color3.fromRGB(255, 255, 255)
-script3.TextSize = 14.000
-script3.MouseButton1Down:connect(function()
+fly.Name = "fly"
+fly.Parent = Frame
+fly.BackgroundColor3 = Color3.fromRGB(21, 21, 21)
+fly.BorderColor3 = Color3.fromRGB(21, 21, 21)
+fly.Position = UDim2.new(0.298360646, 0, 0.668202758, 0)
+fly.Size = UDim2.new(0, 157, 0, 50)
+fly.Font = Enum.Font.GothamBold
+fly.Text = "Fly [X] "
+fly.TextColor3 = Color3.fromRGB(255, 255, 255)
+fly.TextSize = 14.000
+fly.MouseButton1Down:connect(function()
 	local plr = game.Players.LocalPlayer
 	local mouse = plr:GetMouse()
 
@@ -189,32 +184,57 @@ script3.MouseButton1Down:connect(function()
 	start()
 end)
 
+TextLabel.Parent = Frame
+TextLabel.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+TextLabel.BorderColor3 = Color3.fromRGB(15, 15, 15)
+TextLabel.Position = UDim2.new(0, 0, -0.124423966, 0)
+TextLabel.Size = UDim2.new(0, 305, 0, 38)
+TextLabel.Font = Enum.Font.SourceSans
+TextLabel.Text = ""
+TextLabel.TextColor3 = Color3.fromRGB(0, 0, 0)
+TextLabel.TextSize = 14.000
+
+TextLabel_2.Parent = Frame
+TextLabel_2.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+TextLabel_2.BorderColor3 = Color3.fromRGB(15, 15, 15)
+TextLabel_2.Position = UDim2.new(-0.245901644, 0, -0.124423966, 0)
+TextLabel_2.Size = UDim2.new(0, 81, 0, 244)
+TextLabel_2.Font = Enum.Font.SourceSans
+TextLabel_2.Text = ""
+TextLabel_2.TextColor3 = Color3.fromRGB(0, 0, 0)
+TextLabel_2.TextSize = 14.000
+
+CRASHER.Name = "CRASHER"
+CRASHER.Parent = Frame
+CRASHER.BackgroundColor3 = Color3.fromRGB(31, 31, 31)
+CRASHER.BorderColor3 = Color3.fromRGB(31, 31, 31)
+CRASHER.Position = UDim2.new(-0.209836066, 0, 0.322580636, 0)
+CRASHER.Size = UDim2.new(0, 59, 0, 40)
+CRASHER.Font = Enum.Font.GothamBold
+CRASHER.Text = "Crash"
+CRASHER.TextColor3 = Color3.fromRGB(255, 255, 255)
+CRASHER.TextSize = 14.000
+CRASHER.MouseButton1Down:connect(function()
+	loadstring(game:HttpGet('https://raw.githubusercontent.com/lerkermer/lua-projects/master/SuperCustomServerCrasher'))()
+end)
+
+MAIN.Name = "MAIN"
+MAIN.Parent = Frame
+MAIN.BackgroundColor3 = Color3.fromRGB(118, 11, 11)
+MAIN.BorderColor3 = Color3.fromRGB(118, 11, 11)
+MAIN.Position = UDim2.new(0.0196721312, 0, 0.0506912433, 0)
+MAIN.Size = UDim2.new(0, 299, 0, 42)
+MAIN.Font = Enum.Font.GothamBold
+MAIN.Text = "Josh's GUI"
+MAIN.TextColor3 = Color3.fromRGB(255, 255, 255)
+MAIN.TextSize = 24.000
+
 TextLabel_3.Parent = Frame
-TextLabel_3.BackgroundColor3 = Color3.fromRGB(102, 102, 102)
-TextLabel_3.BorderColor3 = Color3.fromRGB(102, 102, 102)
-TextLabel_3.Position = UDim2.new(0.697761178, 0, 0.905263126, 0)
-TextLabel_3.Size = UDim2.new(0, 74, 0, 12)
-TextLabel_3.Font = Enum.Font.SourceSans
+TextLabel_3.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+TextLabel_3.BorderColor3 = Color3.fromRGB(15, 15, 15)
+TextLabel_3.Position = UDim2.new(-0.245901644, 0, 0.769585252, 0)
+TextLabel_3.Size = UDim2.new(0, 81, 0, 50)
+TextLabel_3.Font = Enum.Font.GothamBlack
 TextLabel_3.Text = ".Joshh#2000"
 TextLabel_3.TextColor3 = Color3.fromRGB(255, 255, 255)
-TextLabel_3.TextSize = 14.000
-
-TextLabel_4.Parent = Frame
-TextLabel_4.BackgroundColor3 = Color3.fromRGB(49, 49, 49)
-TextLabel_4.BorderColor3 = Color3.fromRGB(49, 49, 49)
-TextLabel_4.Position = UDim2.new(-0.100746267, 0, -0.0736842081, 0)
-TextLabel_4.Size = UDim2.new(0, 84, 0, 14)
-TextLabel_4.Font = Enum.Font.SourceSans
-TextLabel_4.Text = "Josh's Selling GUI"
-TextLabel_4.TextColor3 = Color3.fromRGB(255, 255, 255)
-TextLabel_4.TextSize = 14.000
-
-TextLabel_5.Parent = Frame
-TextLabel_5.BackgroundColor3 = Color3.fromRGB(102, 102, 102)
-TextLabel_5.BorderColor3 = Color3.fromRGB(102, 102, 102)
-TextLabel_5.Position = UDim2.new(-0.108208954, 0, 0.115789473, 0)
-TextLabel_5.Size = UDim2.new(0, 56, 0, 22)
-TextLabel_5.Font = Enum.Font.SourceSans
-TextLabel_5.Text = "Main"
-TextLabel_5.TextColor3 = Color3.fromRGB(255, 255, 255)
-TextLabel_5.TextSize = 14.000
+TextLabel_3.TextSize = 12.000
